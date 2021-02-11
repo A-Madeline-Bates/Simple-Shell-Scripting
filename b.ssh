@@ -1,0 +1,46 @@
+#!/bin/sh
+set -euo pipefail
+
+noargument=0
+
+## if command was given ##
+if [ "$#" -ne "$noargument" ]
+then
+
+## if file is real ##
+if [ -f "$2" ]
+then
+
+## remove file extension ##
+FILE=`basename "$2" .c`
+
+## compile ##
+if [ "$1" == compile ]
+then
+gcc -Wall -std=c11 -g "$FILE".c -o "$FILE"
+
+## run ##
+elif [ "$1" == run ]
+then
+./"$FILE"
+
+## build ##
+elif [ "$1" == build ]
+then
+gcc -Wall -std=c11 -g "$FILE".c -o "$FILE" && ./"$FILE" || echo "compile unsuccessful"
+
+## if there was no command ##
+else
+echo "Command options are COMPILE, RUN and BUILD. Please try again."
+fi
+
+## if file wasn't real ##
+else
+echo "Not a file"
+return 1
+fi
+
+## if no command ##
+else
+echo "You need to put a command line and then a file to make this work"
+fi
